@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BMR Calculator (US Units)</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 30px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 25px;
+      background: white;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>BMR Calculator</h1>
+
+<form id="bmrForm">
+  <label>Name:
+    <input type="text" id="name" required>
+  </label>
+  <label>Age (years):
+    <input type="number" id="age" required>
+  </label>
+  <label>Gender:
+    <select id="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </label>
+  <label>Height (inches):
+    <input type="number" id="height" required>
+  </label>
+  <label>Weight (lbs):
+    <input type="number" id="weight" required>
+  </label>
+  <label>Activity Level:
+    <select id="activity">
+      <option value="1.2">Sedentary</option>
+      <option value="1.375">Lightly active</option>
+      <option value="1.55">Moderately active</option>
+      <option value="1.725">Very active</option>
+      <option value="1.9">Super active</option>
+    </select>
+  </label>
+  <button type="submit">Calculate</button>
+</form>
+
+<div class="result" id="result" style="display: none;"></div>
+
+<script>
+  document.getElementById("bmrForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const age = +document.getElementById("age").value;
+    const gender = document.getElementById("gender").value;
+    const heightIn = +document.getElementById("height").value;
+    const weightLbs = +document.getElementById("weight").value;
+    const activity = +document.getElementById("activity").value;
+
+    if (!name || age <= 0 || heightIn <= 0 || weightLbs <= 0) {
+      alert("Please enter valid values.");
+      return;
+    }
+
+    // Convert pounds to kg and inches to cm
+    const weight = weightLbs * 0.453592;
+    const height = heightIn * 2.54;
+
+    let bmr = gender === "male"
+      ? 10 * weight + 6.25 * height - 5 * age + 5
+      : 10 * weight + 6.25 * height - 5 * age - 161;
+
+    let calories = bmr * activity;
+
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").innerHTML = `
+      <h3>Hi, ${name}!</h3>
+      <p>Your BMR is <strong>${bmr.toFixed(2)}</strong> calories/day.</p>
+      <p>Your estimated daily calorie needs are <strong>${calories.toFixed(2)}</strong> calories/day based on your activity level.</p>
+    `;
+  });
+</script>
+
+</body>
+</html>
